@@ -6,12 +6,7 @@ namespace ShootEmUp
     {
         internal static void DealDamage(Bullet bullet, GameObject other)
         {
-            if (!other.TryGetComponent(out TeamComponent team))
-            {
-                return;
-            }
-
-            if (bullet.isPlayer == team.IsPlayer)
+            if (IsSameTeam(bullet.gameObject, other))
             {
                 return;
             }
@@ -19,6 +14,18 @@ namespace ShootEmUp
             if (other.TryGetComponent(out HitPointsComponent hitPoints))
             {
                 hitPoints.TakeDamage(bullet.damage);
+            }
+        }
+
+        public static bool IsSameTeam(GameObject bullet, GameObject other)
+        {
+            switch (bullet.gameObject.layer)
+            {
+                case (int)PhysicsLayer.PLAYER when other.layer == (int)PhysicsLayer.PLAYER_BULLET:
+                case (int)PhysicsLayer.ENEMY when other.layer == (int)PhysicsLayer.ENEMY_BULLET:
+                    return true;
+                default:
+                    return false;
             }
         }
     }

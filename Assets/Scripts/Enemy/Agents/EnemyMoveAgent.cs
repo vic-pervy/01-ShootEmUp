@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace ShootEmUp
@@ -32,11 +33,13 @@ namespace ShootEmUp
             if (vector.magnitude <= 0.25f)
             {
                 this.isReached = true;
+                this.moveComponent.MoveDirection(Vector2.zero);
                 return;
             }
 
-            var direction = vector.normalized * Time.fixedDeltaTime;
-            this.moveComponent.MoveByRigidbodyVelocity(direction);
+            var n = vector.normalized;
+            var magnitude = Math.Max(vector.magnitude, 1);
+            this.moveComponent.MoveDirection(n * magnitude);
         }
     }
 }

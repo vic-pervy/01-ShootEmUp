@@ -56,7 +56,6 @@ namespace ShootEmUp
             bullet.SetColor(args.color);
             bullet.SetPhysicsLayer(args.physicsLayer);
             bullet.damage = args.damage;
-            bullet.isPlayer = args.isPlayer;
             bullet.SetVelocity(args.velocity);
             
             if (this.m_activeBullets.Add(bullet))
@@ -88,7 +87,6 @@ namespace ShootEmUp
             public Color color;
             public int physicsLayer;
             public int damage;
-            public bool isPlayer;
         }
     }
 }

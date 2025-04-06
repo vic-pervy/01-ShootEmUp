@@ -4,20 +4,20 @@ namespace ShootEmUp
 {
     public sealed class EnemyAttackAgent : MonoBehaviour
     {
-        public delegate void FireHandler(GameObject enemy, Vector2 position, Vector2 direction);
-
-        public event FireHandler OnFire;
+        // public delegate void FireHandler(GameObject enemy, Vector2 position, Vector2 direction);
+        //
+        // public event FireHandler OnFire;
 
         [SerializeField] private WeaponComponent weaponComponent;
         [SerializeField] private EnemyMoveAgent moveAgent;
         [SerializeField] private float countdown;
 
-        private GameObject target;
+        private HitPointsComponent target;
         private float currentTime;
 
         public void SetTarget(GameObject target)
         {
-            this.target = target;
+            this.target = target.GetComponent<HitPointsComponent>();
         }
 
         public void Reset()
@@ -27,12 +27,12 @@ namespace ShootEmUp
 
         private void FixedUpdate()
         {
-            if (!this.moveAgent.IsReached)
+            if (!this.moveAgent.IsReached || !this.target)
             {
                 return;
             }
             
-            if (!this.target.GetComponent<HitPointsComponent>().IsHitPointsExists())
+            if (!this.target.IsHitPointsExists())
             {
                 return;
             }
@@ -40,7 +40,7 @@ namespace ShootEmUp
             this.currentTime -= Time.fixedDeltaTime;
             if (this.currentTime <= 0)
             {
-                this.Fire();
+                Fire();
                 this.currentTime += this.countdown;
             }
         }
@@ -50,7 +50,7 @@ namespace ShootEmUp
             var startPosition = this.weaponComponent.Position;
             var vector = (Vector2) this.target.transform.position - startPosition;
             var direction = vector.normalized;
-            this.OnFire?.Invoke(this.gameObject, startPosition, direction);
+            //this.OnFire?.Invoke(this.gameObject, startPosition, direction);
             
             weaponComponent.Fire(startPosition, direction);
         }

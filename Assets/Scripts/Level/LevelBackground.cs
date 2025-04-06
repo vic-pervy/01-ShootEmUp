@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace ShootEmUp
 {
@@ -18,13 +19,13 @@ namespace ShootEmUp
         private Transform myTransform;
 
         [SerializeField]
-        private Params m_params;
+        private Params bgParams;
 
         private void Awake()
         {
-            this.startPositionY = this.m_params.m_startPositionY;
-            this.endPositionY = this.m_params.m_endPositionY;
-            this.movingSpeedY = this.m_params.m_movingSpeedY;
+            this.startPositionY = this.bgParams.startPositionY;
+            this.endPositionY = this.bgParams.endPositionY;
+            this.movingSpeedY = this.bgParams.movingSpeedY;
             this.myTransform = this.transform;
             var position = this.myTransform.position;
             this.positionX = position.x;
@@ -53,13 +54,13 @@ namespace ShootEmUp
         public sealed class Params
         {
             [SerializeField]
-            public float m_startPositionY;
+            public float startPositionY;
 
             [SerializeField]
-            public float m_endPositionY;
+            public float endPositionY;
 
             [SerializeField]
-            public float m_movingSpeedY;
+            public float movingSpeedY;
         }
     }
 }

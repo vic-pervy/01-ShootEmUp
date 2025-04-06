@@ -26,18 +26,19 @@ namespace ShootEmUp
         
         private void Awake()
         {
-            for (var i = 0; i < 7; i++)
+            const int POOL_SIZE = 7;
+            for (var i = 0; i < POOL_SIZE; i++)
             {
                 var enemy = Instantiate(this.prefab, this.container);
                 this.enemyPool.Enqueue(enemy);
             }
         }
 
-        public GameObject SpawnEnemy()
+        public bool TrySpawnEnemy(out GameObject enemy)
         {
-            if (!this.enemyPool.TryDequeue(out var enemy))
+            if (!this.enemyPool.TryDequeue(out enemy))
             {
-                return null;
+                return false;
             }
 
             enemy.transform.SetParent(this.worldTransform);
@@ -49,7 +50,7 @@ namespace ShootEmUp
             enemy.GetComponent<EnemyMoveAgent>().SetDestination(attackPosition.position);
 
             enemy.GetComponent<EnemyAttackAgent>().SetTarget(this.character);
-            return enemy;
+            return true;
         }
 
         public void UnspawnEnemy(GameObject enemy)

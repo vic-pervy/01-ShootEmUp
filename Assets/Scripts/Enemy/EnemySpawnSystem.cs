@@ -1,28 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace ShootEmUp
 {
     public sealed class EnemySpawnSystem : MonoBehaviour
     {
         [SerializeField]
-        private EnemyPool _enemyPool;
-
-        [SerializeField]
-        private BulletSystem _bulletSystem;
+        private EnemyPool enemyPool;
         
-        private readonly HashSet<GameObject> m_activeEnemies = new();
+        private readonly HashSet<GameObject> activeEnemies = new();
 
         private IEnumerator Start()
         {
             while (true)
             {
-                yield return new WaitForSeconds(1);
-                var enemy = this._enemyPool.SpawnEnemy();
-                if (enemy != null)
+                const float ENEMY_RESPAWN_COUNTDOWN_TIME = 1f;
+                yield return new WaitForSeconds(ENEMY_RESPAWN_COUNTDOWN_TIME);
+                if (this.enemyPool.TrySpawnEnemy(out var enemy))
                 {
-                    if (this.m_activeEnemies.Add(enemy))
+                    if (this.activeEnemies.Add(enemy))
                     {
                         enemy.GetComponent<HitPointsComponent>().hpEmpty += this.OnDestroyed;
                     }    
@@ -32,11 +30,11 @@ namespace ShootEmUp
 
         private void OnDestroyed(GameObject enemy)
         {
-            if (m_activeEnemies.Remove(enemy))
+            if (this.activeEnemies.Remove(enemy))
             {
                 enemy.GetComponent<HitPointsComponent>().hpEmpty -= this.OnDestroyed;
 
-                _enemyPool.UnspawnEnemy(enemy);
+                this.enemyPool.UnspawnEnemy(enemy);
             }
         }
 

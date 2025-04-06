@@ -1,22 +1,48 @@
+using System;
 using ShootEmUp;
 using UnityEngine;
 
 namespace Player.Agents
 {
-    public class InputPlayerAgent : MonoBehaviour, IInputListener
+    [RequireComponent(typeof(MoveComponent), typeof(WeaponComponent))]
+    public class InputPlayerAgent : MonoBehaviour
     {
+        [SerializeField]
+        private InputManager inputManager;
+        [SerializeField]
+        private MoveComponent moveComponent;
+        [SerializeField]
+        private WeaponComponent weaponComponent;
+
+        private void OnValidate()
+        {
+            this.moveComponent = GetComponent<MoveComponent>();
+            this.weaponComponent = GetComponent<WeaponComponent>();
+        }
+
+        private void OnEnable()
+        {
+            this.inputManager.onMove += OnMoveDirection;
+            this.inputManager.onFire += OnFire;
+        }
+
+        private void OnDisable()
+        {
+            this.inputManager.onMove -= OnMoveDirection;
+            this.inputManager.onFire -= OnFire;
+        }
+
         public void OnMoveDirection(Vector2 moveDirection)
         {
-            GetComponent<MoveComponent>().MoveDirection(moveDirection);
+            this.moveComponent.MoveDirection(moveDirection);
         }
 
         public void OnFire(bool obj)
         {
-            var weapon = GetComponent<WeaponComponent>();
-            var position = weapon.Position;
+            var position = this.weaponComponent.Position;
             var velocity = Vector3.up;
                 
-            weapon.Fire(position, velocity);
+            this.weaponComponent.Fire(position, velocity);
         }
     }
 }

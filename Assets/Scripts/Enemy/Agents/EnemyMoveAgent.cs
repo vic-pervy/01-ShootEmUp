@@ -30,7 +30,8 @@ namespace ShootEmUp
             }
             
             var vector = this.destination - (Vector2) this.transform.position;
-            if (vector.magnitude <= 0.25f)
+            const float DISTANCE_TO_STOP = 0.25f;
+            if (vector.magnitude <= DISTANCE_TO_STOP)
             {
                 this.isReached = true;
                 this.moveComponent.MoveDirection(Vector2.zero);
